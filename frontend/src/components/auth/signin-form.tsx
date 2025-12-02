@@ -7,17 +7,14 @@ import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-const signUpSchema = z.object({
-  firstname: z.string().min(1, 'Tên bắt buộc phải có'),
-  lastname: z.string().min(1, 'Họ bắt buộc phải có'),
+const signInSchema = z.object({
   username: z.string().min(1, 'Tên đăng nhập không hợp lệ'),
-  email: z.string().min(1, 'Email không hợp lệ'),
   password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
 });
 
-type SignUpFormValue = z.infer<typeof signUpSchema>;
+type SignInFormValue = z.infer<typeof signInSchema>;
 
-export function SignupForm({
+export function SigninForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
@@ -25,13 +22,12 @@ export function SignupForm({
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormValue>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<SignInFormValue>({
+    resolver: zodResolver(signInSchema),
   });
 
-  const onSubmit = async (data: SignUpFormValue) => {
+  const onSubmit = async (data: SignInFormValue) => {
     // Call backend API for SighUp
-    
   };
 
   return (
@@ -45,40 +41,10 @@ export function SignupForm({
                 <a href='/' className='mx-auto block w-fit text-center'>
                   <img src='/logo.svg' alt='Logo' />
                 </a>
-                <h1 className='text-2xl font-bold'>Tạo mới tài khoản Omonji</h1>
+                <h1 className='text-2xl font-bold'>Chào mừng quay trở </h1>
                 <p className='text-muted-foreground text-balance'>
-                  Chào bạn, vui lòng tạo mới tài khoản để tiếp tục!
+                  Đăng nhập vào tài khoản của bạn để tiếp tục
                 </p>
-              </div>
-              {/* first and last name */}
-              <div className='grid grid-cols-2 gap-3'>
-                {' '}
-                <div className='space-y-2'>
-                  <Label htmlFor='lastname' className='block text-sm '>
-                    Họ và tên đệm
-                  </Label>
-                  <Input type='text' id='lastname' {...register('lastname')} />
-                  {errors.lastname && (
-                    <p className='text-destructive text-sm'>
-                      {errors.lastname.message}
-                    </p>
-                  )}
-                </div>
-                <div className='space-y-2'>
-                  <Label htmlFor='firstname' className='block text-sm '>
-                    Tên
-                  </Label>
-                  <Input
-                    type='text'
-                    id='firstname'
-                    {...register('firstname')}
-                  />
-                  {errors.firstname && (
-                    <p className='text-destructive text-sm'>
-                      {errors.firstname.message}
-                    </p>
-                  )}
-                </div>
               </div>
               {/* username */}
               <div className='flex flex-col gap-3'>
@@ -94,23 +60,6 @@ export function SignupForm({
                 {errors.username && (
                   <p className='text-destructive text-sm'>
                     {errors.username.message}
-                  </p>
-                )}
-              </div>
-              {/* email */}
-              <div className='flex flex-col gap-3'>
-                <Label htmlFor='email' className='block text-sm '>
-                  Email
-                </Label>
-                <Input
-                  type='email'
-                  id='email'
-                  placeholder='marcus@gmail.com'
-                  {...register('email')}
-                />
-                {errors.email && (
-                  <p className='text-destructive text-sm'>
-                    {errors.email.message}
                   </p>
                 )}
               </div>
@@ -130,26 +79,26 @@ export function SignupForm({
                   </p>
                 )}
               </div>
-              {/* Signup button */}
+              {/* SignIn button */}
               <Button
                 type='submit'
                 className='w-full text-base cursor-pointer'
                 disabled={isSubmitting}
               >
-                Đăng ký
+                Đăng nhập
               </Button>
             </div>
 
             <div className='mt-2 text-center text-sm *:[a]:hover:text-primary text-muted-foreground *:[a]:underline *:[a]:underline-offset-4'>
-              Đã có tài khoản?{' '}
-              <a href='/signin' className='underline underline-offset-4'>
-                Đăng nhập
+              Chưa có tài khoản?{' '}
+              <a href='/signup' className='underline underline-offset-4'>
+                Đăng ký
               </a>
             </div>
           </form>
           <div className='bg-muted relative hidden md:block'>
             <img
-              src='/placeholderSignUp.png'
+              src='/placeholder.png'
               alt='Image'
               className='absolute top-1/2 -translate-y-1/2 object-cover'
             />
