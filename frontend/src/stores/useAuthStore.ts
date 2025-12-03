@@ -35,11 +35,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       set({ loading: true });
       const { accessToken } = await authService.signIn(username, password);
       set({ accessToken });
+      await get().fetchUser(); // Load get user data after Login
       toast.success('Chào mừng bạn quay trở lại!');
     } catch (error) {
-      //   set({ loading: false });
       console.error(error);
       toast.error('Đăng nhập không thành ');
+    } finally {
+      set({ loading: false });
     }
   },
 
@@ -50,6 +52,22 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch (error) {
       console.error(error);
       toast.error('Lỗi xảy ra khi logout. Xin hãy thử lại sau');
+    }
+  },
+
+  fetchUser: async () => {
+    try {
+      set({ loading: true });
+      const user = await authService.fetchUser();
+      set({ user });
+    } catch (error) {
+      console.error(error);
+      set({ user: null, accessToken: null });
+      toast.error(
+        'Lỗi xảy ra khi lấy dữ liệu người dùng. Xin hãy thử lại sau!',
+      );
+    } finally {
+      set({ loading: false });
     }
   },
 }));
