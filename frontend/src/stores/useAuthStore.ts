@@ -8,6 +8,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   loading: false,
 
+  setAccessToken(accessToken) {
+    set({ accessToken });
+  },
+
   //Re-use store when user logout or token expired
   clearState: () => {
     set({ accessToken: null, user: null, loading: false });
@@ -34,7 +38,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       set({ loading: true });
       const { accessToken } = await authService.signIn(username, password);
-      set({ accessToken });
+      get().setAccessToken(accessToken);
       await get().fetchUser(); // Load get user data after Login
       toast.success('Chào mừng bạn quay trở lại!');
     } catch (error) {
@@ -66,6 +70,26 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       toast.error(
         'Lỗi xảy ra khi lấy dữ liệu người dùng. Xin hãy thử lại sau!',
       );
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  refresh: async () => {
+    try {
+      set({ loading: true });
+      const { user, fetchUser, setAccessToken } = get();
+      const accessToken = await authService.refresh();
+
+      setAccessToken(accessToken);
+
+      if (!user) {
+        await fetchUser();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại!');
+      get().clearState();
     } finally {
       set({ loading: false });
     }

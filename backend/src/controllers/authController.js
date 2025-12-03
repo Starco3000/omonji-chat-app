@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import User from '../models/User.js';
 import Session from '../models/Session.js';
 
-const ACCESS_TOKEN_TTL = '30m'; //Noramlly under 15 mins
+const ACCESS_TOKEN_TTL = '30s'; //Noramlly under 15 mins
 const REFESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days
 
 export const signUp = async (req, res) => {
@@ -123,5 +123,43 @@ export const signOut = async (req, res) => {
   } catch (error) {
     console.error(`Error when call signOut`, error);
     return res.status(500).json({ message: 'System error' });
+  }
+};
+
+// Create a new access token from refresh token
+export const refreshToken = async (req, res) => {
+  try {
+    //Get refresh token from Cookie
+    const token = req.cookies?.refreshToken;
+    if (!token) {
+      return res.status(401).json({ message: 'Token không tồn tại' });
+    }
+
+    //Compare with refreshToken in database
+    const session = await Session.findOne({ refreshToken: token });
+    if (!session) {
+      return res
+        .status(403)
+        .json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
+    }
+    //Check token's expired date
+    if (session.expiresAt < new Date()) {
+      return res.status(403).json({ message: 'Token đã hết hạn' });
+    }
+
+    //Create a new access token
+    const accessToken = jwt.sign(
+      { userId: session.userId },
+      process.env.ACCESS_TOKEN_SECRET,
+      {
+        expiresIn: ACCESS_TOKEN_TTL,
+      },
+    );
+
+    //Return the new access token back to user
+    return res.status(200).json({ accessToken });
+  } catch (error) {
+    console.error('Lỗi khi gọi refreshToken', error);
+    return res.status(500).json({ message: 'System Error' });
   }
 };
