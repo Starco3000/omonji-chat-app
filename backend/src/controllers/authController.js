@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import User from '../models/User.js';
 import Session from '../models/Session.js';
 
-const ACCESS_TOKEN_TTL = '30s'; //Noramlly under 15 mins
+const ACCESS_TOKEN_TTL = '30m'; //Noramlly under 15 mins
 const REFESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days
 
 export const signUp = async (req, res) => {
