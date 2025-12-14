@@ -198,29 +198,32 @@ export const getFriendRequests = async (req, res) => {
 export const deleteFriend = async (req, res) => {
   try {
     // Get friendId from params
-    const { friendId } = req.params;
-    // Get userId
+    const { friendUserId } = req.params;
+    // Get current userId
     const userId = req.user._id;
-    // Find friend using friendId
-    const friendShip = await Friend.findById(friendId);
 
-    // Check if friend does not exist
+    // Check if user trying to delete themselves
+    if (userId.toString() === friendUserId) {
+      return res
+        .status(400)
+        .json({ message: 'Cannot delete friendship with yourself' });
+    }
+
+    // Find friendship document (current user is either userA or userB in the friendship)
+    const friendShip = await Friend.findOne({
+      $or: [
+        { userA: userId, userB: friendUserId },
+        { userA: friendUserId, userB: userId },
+      ],
+    });
+
+    // Check if friendship exists
     if (!friendShip) {
       return res.status(404).json({ message: 'Friend does not exist' });
     }
-    // Check if current user is either userA or userB in the friendship
-    const isUserInFriendship =
-      friendShip.userA.toString() === userId.toString() ||
-      friendShip.userB.toString() === userId.toString();
 
-    if (!isUserInFriendship) {
-      return res.status(403).json({
-        message: "You don't have permission to delete this friend",
-      });
-    }
-
-    //If userId valid then do the action below
-    await Friend.findByIdAndDelete(friendId);
+    //If valid, then delete the friendShip
+    await Friend.findByIdAndDelete(friendShip._id);
 
     return res.status(200).json({ message: 'Friend deleted successfully!' });
   } catch (error) {

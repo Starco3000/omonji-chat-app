@@ -24,6 +24,6 @@ router.get('/', getAllFriends);
 router.get('/requests', getFriendRequests);
 
 //Delete method
-router.delete('/:friendId', deleteFriend);
+router.delete('/user/:friendUserId', deleteFriend);
 
 export default router;
