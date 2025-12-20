@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const participantSChema = new mongoose.Schema(
+const participantSchema = new mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -62,7 +62,7 @@ const conversationSchema = new mongoose.Schema(
       required: true,
     },
     participants: {
-      type: [participantSChema],
+      type: [participantSchema],
       required: true,
     },
     group: {
@@ -77,7 +77,7 @@ const conversationSchema = new mongoose.Schema(
       type: lastMessageSchema,
       default: null,
     },
-    unreadCountes: {
+    unreadCounts: {
       type: Map, // Lưu số tin nhắn chưa đọc từng User
       of: Number,
       default: {},
