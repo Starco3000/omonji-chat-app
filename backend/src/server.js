@@ -5,6 +5,7 @@ import authRoute from './routes/authRoute.js';
 import userRoute from './routes/userRoute.js';
 import friendRoute from './routes/friendRoute.js';
 import messageRoute from './routes/messageRoute.js';
+import conversationRoute from './routes/conversationRoute.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { protectedRoute } from './middlewares/authMiddleware.js';
@@ -30,6 +31,7 @@ app.use(protectedRoute);
 app.use('/api/users', userRoute);
 app.use('/api/friends', friendRoute);
 app.use('/api/messages', messageRoute);
+app.use('/api/conversations', conversationRoute);
 
 //Running server
 connectDB().then(() => {
