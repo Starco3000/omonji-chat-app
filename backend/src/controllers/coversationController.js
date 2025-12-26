@@ -120,7 +120,7 @@ export const getConversations = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { conversationId } = req.params;
-    const { limit = 50, cursor } = req.params;
+    const { limit = 50, cursor } = req.query;
 
     const query = { conversationId };
 
