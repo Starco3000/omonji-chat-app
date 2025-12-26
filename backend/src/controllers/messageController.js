@@ -19,7 +19,7 @@ export const sendDirectMessage = async (req, res) => {
     }
 
     // If conversation does not exist, then create a new one
-    if (!conversationId) {
+    if (!conversation) {
       conversation = await Conversation.create({
         type: 'direct',
         participants: [
@@ -51,6 +51,25 @@ export const sendDirectMessage = async (req, res) => {
 
 export const sendGroupMessage = async (req, res) => {
   try {
+    const { conversationId, content } = req.body;
+    const senderId = req.user._id;
+    const conversation = req.conversation;
+
+    if (!content) {
+      return res.status(400).json({ message: 'The content is empty!' });
+    }
+
+    const message = await Message.create({
+      conversationId,
+      senderId,
+      content,
+    });
+
+    updateConversationAfterCreateMessage(conversation, message, senderId);
+
+    await conversation.save();
+
+    return res.status(201).json({ message });
   } catch (error) {
     console.error('Error when send group message', error);
     res.status(500).json({ message: 'System error' });
