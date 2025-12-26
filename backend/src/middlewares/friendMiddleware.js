@@ -17,7 +17,7 @@ export const checkFriendship = async (req, res, next) => {
     // }
 
     if (!recipientId && memberIds.length === 0) {
-      return res
+        return res
         .status(400)
         .json({ message: 'Cần cung cấp recipientId hoặc memberIds' });
     }
@@ -45,14 +45,47 @@ export const checkFriendship = async (req, res, next) => {
     const notFriends = results.filter(Boolean);
 
     if (notFriends.length > 0) {
-      res
+      return res
         .status(403)
         .json({ message: 'You can only add friend into group', notFriends });
     }
 
-    //Group Chat
+    next();
+
   } catch (error) {
-    console.error('Error when check friendship', error);
+    console.error('Error in checkFriendship middleware', error);
     return res.status(500).json({ message: 'Systerm error' });
+  }
+};
+
+export const checkGroupMembership = async (req, res, next) => {
+  try {
+    const { conversationId } = req.body;
+    const userId = req.user._id;
+
+    const conversation = await Conversation.findById(conversationId);
+
+    if (!conversation) {
+      return res.status(404).json({ message: 'Cannot find the conversation' });
+    }
+
+    //Check sender is the member of the group or not
+    const isMember = conversation.participants.some(
+      (p) => p.userId.toString() === userId.toString(),
+    );
+
+    if (!isMember) {
+      return res.status(403).json({
+        message:
+          'You are not in this group! Only members can send message in group',
+      });
+    }
+
+    req.conversation = conversation;
+
+    next();
+  } catch (error) {
+    console.error('Error in checkGroupMembership middleware');
+    return res.status(500).json({ message: 'System error' });
   }
 };
