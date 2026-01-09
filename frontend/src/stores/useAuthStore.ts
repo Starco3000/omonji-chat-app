@@ -49,13 +49,16 @@ export const useAuthStore = create<AuthState>()(
       signIn: async (username, password) => {
         try {
           set({ loading: true });
-
+          //Clear old localstorage before user login
           localStorage.clear();
           useChatStore.getState().reset();
-
+          //User login and get accessToken
           const { accessToken } = await authService.signIn(username, password);
           get().setAccessToken(accessToken);
-          await get().fetchUser(); // Load get user data after Login
+          // Load get user data after Login and fetch their conversations
+          await get().fetchUser(); 
+          useChatStore.getState().fetchConversations();
+
           toast.success('Chào mừng bạn quay trở lại!');
         } catch (error) {
           console.error(error);
