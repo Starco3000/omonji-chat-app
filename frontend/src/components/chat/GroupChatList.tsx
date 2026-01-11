@@ -1,11 +1,19 @@
-import React from 'react'
+import { useChatStore } from '@/stores/useChatStore';
+import GroupChatCard from './GroupChatCard';
 
 const GroupChatList = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  const { conversations } = useChatStore();
+  if (!conversations) return;
 
-export default GroupChatList
+  const groupChats = conversations.filter((convo) => convo.type === 'direct');
+
+  return (
+    <div className='flex-1 overflow-y-auto p-2 space-x-2'>
+      {groupChats.map((convo) => (
+        <GroupChatCard convo={convo} />
+      ))}
+    </div>
+  );
+};
+
+export default GroupChatList;
