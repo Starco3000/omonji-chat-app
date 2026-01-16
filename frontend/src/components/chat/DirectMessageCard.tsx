@@ -3,6 +3,9 @@ import ChatCard from './ChatCard';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useChatStore } from '@/stores/useChatStore';
 import { cn } from '@/lib/utils';
+import UserAvatar from './UserAvatar';
+import StatusBadge from './StatusBadge';
+import UnreadCountBadge from './UnreadCountBadge';
 
 const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
@@ -18,7 +21,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       // todo: fetch meaages
-    }   
+    }
   };
 
   return (
@@ -35,9 +38,14 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
       unreadCount={unreadCount}
       leftSection={
         <>
-          {/* todo: user avatar */}
-          {/* todo: status badge */}
-          {/* todo: unread Count */}
+          <UserAvatar
+            type='sidebar'
+            name={otherUser.displayName ?? ''}
+            avatarUrl={otherUser.avatarUrl ?? undefined}
+          />
+          {/* todo: socket io */}
+          <StatusBadge status='offline' />
+          {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
         </>
       }
       subtitle={
