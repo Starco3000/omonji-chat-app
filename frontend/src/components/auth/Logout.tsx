@@ -1,7 +1,7 @@
 import { Button } from '../ui/button';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router';
-import { toast } from 'sonner';
 
 const Logout = () => {
   const { signOut } = useAuthStore();
@@ -16,7 +16,10 @@ const Logout = () => {
   };
   return (
     <div>
-      <Button onClick={handleLogout}>Logout</Button>
+      <Button variant='completeGhost' onClick={handleLogout}>
+        <LogOut className='text-destructive' />
+        Log out
+      </Button>
     </div>
   );
 };
