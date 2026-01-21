@@ -9,7 +9,7 @@ import UnreadCountBadge from './UnreadCountBadge';
 
 const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages } =
+  const { activeConversationId, setActiveConversation, messages, fetchMessages } =
     useChatStore();
   if (!user) return null;
   const otherUser = convo.participants.find((p) => p._id !== user._id);
@@ -21,6 +21,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       // todo: fetch meaages
+      await fetchMessages();
     }
   };
 
