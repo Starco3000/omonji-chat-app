@@ -21,7 +21,7 @@ const ChatWindowBody = () => {
 
   if (!messages?.length) {
     return (
-      <div className='flex items-center justify-center h-full  text-muted-foreground'>
+      <div className='flex items-center justify-center h-full text-muted-foreground'>
         Chưa có tin nhắn nào trong cuộc trò chuyện này
       </div>
     );
