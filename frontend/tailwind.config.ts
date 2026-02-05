@@ -116,5 +116,11 @@ export default {
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindScrollbar],
+  plugins: [
+    tailwindcssAnimate,
+    tailwindScrollbar({
+      nocompatible: true,
+      preferredStrategy: 'pseudoelements',
+    }),
+  ],
 } satisfies Config;
