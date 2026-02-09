@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from '../ui/button';
 import { ImagePlus, Send } from 'lucide-react';
 import { Input } from '../ui/input';
-import EmojiPicker from './EmojiPicker';
+import EmojiPickerComponent from './EmojiPickerComponent';
 import { useChatStore } from '@/stores/useChatStore';
 import { toast } from 'sonner';
 
@@ -66,7 +66,7 @@ const MessageInput = ({ selectedConvo }: { selectedConvo: Conversation }) => {
             className='size-8 hover:bg-primary/10 transition-smooth'
           >
             <div>
-              <EmojiPicker
+              <EmojiPickerComponent
                 onChange={(emoji: string) => setValue(`${value}${emoji}`)}
               />
             </div>

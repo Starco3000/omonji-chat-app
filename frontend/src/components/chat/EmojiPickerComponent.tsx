@@ -1,14 +1,15 @@
 import { useThemeStore } from '@/stores/useThemeStore';
 import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
 import { Smile } from 'lucide-react';
-import Picker from '@emoji-mart/react';
-import data from '@emoji-mart/data';
+// import Picker from '@emoji-mart/react';
+// import data from '@emoji-mart/data';
+import EmojiPicker, { Theme, EmojiStyle } from 'emoji-picker-react';
 
 interface EmojiPickerProps {
   onChange: (value: string) => void;
 }
 
-const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
+const EmojiPickerComponent = ({ onChange }: EmojiPickerProps) => {
   const { isDark } = useThemeStore();
 
   return (
@@ -22,15 +23,22 @@ const EmojiPicker = ({ onChange }: EmojiPickerProps) => {
         sideOffset={40}
         className='bg-transparent border-none shadow-none drop-shadow-none mb-12'
       >
-        <Picker
+        {/* <Picker
           theme={isDark ? 'dark' : 'light'}
           data={data}
           onEmojiSelect={(emoji: any) => onChange(emoji.native)}
           emojiSize={24}
+        /> */}
+        <EmojiPicker
+          onEmojiClick={(emojiData: any) => onChange(emojiData.emoji)}
+          theme={isDark ? Theme.DARK : Theme.LIGHT}
+          emojiStyle={EmojiStyle.GOOGLE}
+          width={400}
+          height={450}
         />
       </PopoverContent>
     </Popover>
   );
 };
 
-export default EmojiPicker;
+export default EmojiPickerComponent;
