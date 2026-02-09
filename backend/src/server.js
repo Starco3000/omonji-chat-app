@@ -9,10 +9,11 @@ import conversationRoute from './routes/conversationRoute.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { protectedRoute } from './middlewares/authMiddleware.js';
+import { app, server } from './socket/index.js';
 
 dotenv.config();
 
-const app = express();
+// const app = express();
 const PORT = process.env.PORT || 5001;
 
 // middlewares
@@ -35,7 +36,7 @@ app.use('/api/conversations', conversationRoute);
 
 //Running server
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
   });
 });
