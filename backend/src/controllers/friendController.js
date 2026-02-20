@@ -85,7 +85,7 @@ export const acceptFriendRequest = async (req, res) => {
     }
 
     // If valid, then create relationship between them
-    const friend = await Friend.create({
+    await Friend.create({
       userA: request.from,
       userB: request.to,
     });
