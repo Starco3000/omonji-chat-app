@@ -1,6 +1,10 @@
 import Conversation from '../models/Conversation.js';
 import Message from '../models/Message.js';
-import { updateConversationAfterCreateMessage } from '../utils/messageHelper.js';
+import {
+  emitNewMessage,
+  updateConversationAfterCreateMessage,
+} from '../utils/messageHelper.js';
+import { io } from '../socket/index.js';
 
 export const sendDirectMessage = async (req, res) => {
   try {
@@ -42,6 +46,8 @@ export const sendDirectMessage = async (req, res) => {
 
     await conversation.save();
 
+    emitNewMessage(io, conversation, message);
+
     return res.status(201).json({ message });
   } catch (error) {
     console.error('Error when send direct message', error);
@@ -69,9 +75,13 @@ export const sendGroupMessage = async (req, res) => {
 
     await conversation.save();
 
+    emitNewMessage(io, conversation, message);
+
     return res.status(201).json({ message });
   } catch (error) {
     console.error('Error when send group message', error);
     res.status(500).json({ message: 'System error' });
   }
 };
+
+
