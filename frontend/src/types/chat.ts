@@ -1,5 +1,5 @@
 export interface Participant {
-  _id: string;
+  userId: string;
   displayName: string;
   avatarUrl?: string | null;
   joinedAt: string;
