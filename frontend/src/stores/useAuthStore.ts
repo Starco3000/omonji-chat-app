@@ -56,7 +56,7 @@ export const useAuthStore = create<AuthState>()(
           const { accessToken } = await authService.signIn(username, password);
           get().setAccessToken(accessToken);
           // Load get user data after Login and fetch their conversations
-          await get().fetchUser(); 
+          await get().fetchUser();
           useChatStore.getState().fetchConversations();
 
           toast.success('Chào mừng bạn quay trở lại!');
@@ -70,7 +70,8 @@ export const useAuthStore = create<AuthState>()(
 
       signOut: async () => {
         try {
-          get().clearState(), await authService.signOut();
+          get().clearState();
+          await authService.signOut();
           toast.success('Đăng xuất thành công');
         } catch (error) {
           console.error(error);
