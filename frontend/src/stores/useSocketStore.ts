@@ -41,24 +41,40 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         createdAt: conversation.lastMessage.createdAt,
         sender: {
           _id: conversation.lastMessage.senderId,
-          displayName: "",
+          displayName: '',
           avatarUrl: null,
-        }
+        },
       };
 
-      const updateConversation = {
+      const updatedConversation = {
         ...conversation,
         lastMessage,
-        unreadCounts
-      }
+        unreadCounts,
+      };
 
-      if(useChatStore.getState().activeConversationId === message.conversationId) {
+      if (
+        useChatStore.getState().activeConversationId === message.conversationId
+      ) {
         // mark that already read
-
+        useChatStore.getState().markAsSeen();
       }
 
-      useChatStore.getState().updateConversation(updateConversation)
+      useChatStore.getState().updateConversation(updatedConversation);
+    });
 
+    //read message
+    socket.on('read-message', ({ conversation, lastMessage }) => {
+      const updated = {
+        // _id: conversation._id,
+        // lastMessage,
+        // lastMessageAt: conversation.lastMessageAt,
+        // unreadCounts: conversation.unreadCounts,
+        // seenBy: conversation.seenBy,
+        ...conversation,
+        lastMessage,
+      };
+
+      useChatStore.getState().updateConversation(updated);
     });
   },
 
