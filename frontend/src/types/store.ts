@@ -61,7 +61,7 @@ export interface ChatState {
   addMessage: (message: Message) => Promise<void>;
   // update convo
   // pass a partial conversation object, must include _id so we know which convo to update
-  updateConversation: (conversation: Conversation) => void;
+  updateConversation: (conversation: unknown) => void;
   markAsSeen: () => Promise<void>;
   // addConvo: (convo: Conversation) => void;
   // createConversation: (

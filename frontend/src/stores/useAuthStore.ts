@@ -19,8 +19,9 @@ export const useAuthStore = create<AuthState>()(
       //Re-use store when user logout or token expired
       clearState: () => {
         set({ accessToken: null, user: null, loading: false });
-        localStorage.clear();
         useChatStore.getState().reset();
+        localStorage.clear();
+        sessionStorage.clear();
       },
 
       signUp: async (username, password, email, firstName, lastnName) => {
@@ -48,6 +49,7 @@ export const useAuthStore = create<AuthState>()(
 
       signIn: async (username, password) => {
         try {
+          get().clearState();
           set({ loading: true });
           //Clear old localstorage before user login
           localStorage.clear();
