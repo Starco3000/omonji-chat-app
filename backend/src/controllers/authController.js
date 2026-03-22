@@ -7,6 +7,10 @@ import Session from '../models/Session.js';
 const ACCESS_TOKEN_TTL = '30m'; //Noramlly under 15 mins
 const REFESH_TOKEN_TTL = 14 * 24 * 60 * 60 * 1000; // 14 days
 
+// In development we typically run on http://localhost, so cookies cannot be marked secure.
+// Browsers like Chrome/Edge will ignore cookies with `secure: true` over plain HTTP.
+const IS_PRODUCTION = process.env.NODE_ENV === 'production';
+
 export const signUp = async (req, res) => {
   try {
     const { username, password, email, firstName, lastName } = req.body;
@@ -88,12 +92,15 @@ export const signIn = async (req, res) => {
       expiresAt: new Date(Date.now() + REFESH_TOKEN_TTL),
     });
 
-    //Return accessToken into Cookie
+    // Return refresh token in cookie
+    // - secure: only for production/HTTPS (browsers reject Secure cookies on HTTP)
+    // - sameSite: 'none' is required for cross-site requests (frontend + backend on different origins)
     res.cookie('refreshToken', refreshToken, {
-      httpOnly: true, // Cookie cannot be access by Javascript
-      secure: true, // Only send Cookie via Https
-      sameSite: 'none', //Backend và Frontend deploy
+      httpOnly: true, // Cookie cannot be accessed by JavaScript
+      secure: true, // Only send cookie via HTTPS in production
+      sameSite: 'none', // Required for cross-site (frontend/backend on different origins)
       maxAge: REFESH_TOKEN_TTL,
+      path: '/',
     });
 
     //Return the accessToken into request
@@ -116,8 +123,13 @@ export const signOut = async (req, res) => {
       //Delete refresh token in session
       await Session.deleteOne({ refreshToken: token });
 
-      // Delete cookie
-      res.clearCookie('refreshToken');
+      // Delete cookie (must match options set when creating it)
+      res.clearCookie('refreshToken', {
+        httpOnly: true,
+        secure: IS_PRODUCTION,
+        sameSite: 'none',
+        path: '/',
+      });
     }
     return res.sendStatus(204);
   } catch (error) {
