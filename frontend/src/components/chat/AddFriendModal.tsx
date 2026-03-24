@@ -8,7 +8,7 @@ import {
 } from '../ui/dialog';
 import { UserPlus } from 'lucide-react';
 import type { User } from '@/types/user';
-import { userFriendStore } from '@/stores/useFriendStore';
+import { useFriendStore } from '@/stores/useFriendStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -24,7 +24,7 @@ const AddFriendModal = () => {
   const [isFound, setIsFound] = useState<boolean | null>(null);
   const [searchUser, setSearchUser] = useState<User>();
   const [searchedUsername, setSearchedUsername] = useState('');
-  const { loading, searchByUsername, addFriend } = userFriendStore();
+  const { loading, searchByUsername, addFriend } = useFriendStore();
   const { user } = useAuthStore();
 
   const {
