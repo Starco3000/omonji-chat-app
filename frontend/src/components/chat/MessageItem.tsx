@@ -32,7 +32,7 @@ const MessageItem = ({
     message.senderId !== prev?.senderId; //Nếu tin nhắn mới khác người gửi của tin trước thì tách nhóm
 
   const participant = selectedConvo.participants.find(
-    (p: Participant) => p.userId.toString() == message.senderId.toString(),
+    (p: Participant) => p._id.toString() == message.senderId.toString(),
   );
 
   return (

@@ -26,7 +26,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   }
 
   if (chat.type === 'direct') {
-    const otherUsers = chat.participants.filter((p) => p.userId !== user?._id);
+    const otherUsers = chat.participants.filter((p) => p._id !== user?._id);
     otherUser = otherUsers.length > 0 ? otherUsers[0] : null;
 
     if (!user || !otherUser) return;
@@ -54,7 +54,7 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
                 {/* todo: socket.id */}
                 <StatusBadge
                   status={
-                    onlineUsers.includes(otherUser?.userId ?? '')
+                    onlineUsers.includes(otherUser?._id ?? '')
                       ? 'online'
                       : 'offline'
                   }

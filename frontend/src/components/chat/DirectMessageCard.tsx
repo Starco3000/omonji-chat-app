@@ -19,7 +19,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { onlineUsers } = useSocketStore();
 
   if (!user) return null;
-  const otherUser = convo.participants.find((p) => p.userId !== user._id);
+  const otherUser = convo.participants.find((p) => p._id !== user._id);
   if (!otherUser) return null;
 
   const unreadCount = convo.unreadCounts[user._id];
@@ -54,7 +54,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
           {/* todo: socket io */}
           <StatusBadge
             status={
-              onlineUsers.includes(otherUser?.userId ?? '')
+              onlineUsers.includes(otherUser?._id ?? '')
                 ? 'online'
                 : 'offline'
             }
