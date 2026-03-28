@@ -1,6 +1,6 @@
 import type { Socket } from 'socket.io-client';
 import type { Conversation, Message } from './chat';
-import type { FriendRequest, User } from './user';
+import type { Friend, FriendRequest, User } from './user';
 
 export interface AuthState {
   accessToken: string | null;
@@ -60,16 +60,16 @@ export interface ChatState {
   //add message
   addMessage: (message: Message) => Promise<void>;
   // update convo
-  // pass a partial conversation object, must include _id so we know which convo to update
   updateConversation: (conversation: unknown) => void;
   markAsSeen: () => Promise<void>;
-  // addConvo: (convo: Conversation) => void;
-  // createConversation: (
-  //   type: "group" | "direct",
-  //   name: string,
-  //   memberIds: string[]
-  // ) => Promise<void>;
+  addConvo: (convo: Conversation) => void;
+  createConversation: (
+    type: 'group' | 'direct',
+    name: string,
+    memberIds: string[],
+  ) => Promise<void>;
 }
+
 
 export interface SocketState {
   socket: Socket | null;
@@ -79,7 +79,7 @@ export interface SocketState {
 }
 
 export interface FriendState {
-  // friends: Friend[];
+  friends: Friend[];
   loading: boolean;
   receivedList: FriendRequest[];
   sentList: FriendRequest[];
@@ -88,7 +88,7 @@ export interface FriendState {
   getAllFriendRequests: () => Promise<void>;
   acceptRequest: (requestId: string) => Promise<void>;
   declineRequest: (requestId: string) => Promise<void>;
-  // getFriends: () => Promise<void>;
+  getFriends: () => Promise<void>;
 }
 
 // export interface UserState {

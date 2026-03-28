@@ -69,7 +69,16 @@ export const createConversation = async (req, res) => {
       { path: 'lastMessage.senderId', select: 'displayName avatarUrl' },
     ]);
 
-    return res.status(201).json({ conversation });
+    const participants = (conversation.participants || []).map((p) => ({
+      _id: p.userId?._id,
+      displayName: p.userId?.displayName,
+      avatarUrl: p.userId?.avatarUrl ?? null,
+      joinedAt: p.joinedAt,
+    }));
+
+    const formatted = { ...conversation.toObject(), participants };
+
+    return res.status(201).json({ conversation: formatted });
   } catch (error) {
     console.error('Error when create Conversation', error);
     return res.status(500).json({ message: 'System error' });
@@ -98,7 +107,7 @@ export const getConversations = async (req, res) => {
 
     const formatted = conversations.map((convo) => {
       const participants = (convo.participants || []).map((p) => ({
-        userId: p.userId?._id,
+        _id: p.userId?._id,
         displayName: p.userId?.displayName,
         avatarUrl: p.userId?.avatarUrl ?? null,
         joinedAt: p.joinedAt,
@@ -153,9 +162,7 @@ export const getMessages = async (req, res) => {
 export const getUserConversationsForSocketIO = async (userId) => {
   try {
     const conversations = await Conversation.find(
-      {
-        'participants.userId': userId,
-      },
+      { 'participants.userId': userId },
       { _id: 1 },
     );
 
@@ -195,9 +202,7 @@ export const markAsSeen = async (req, res) => {
         $addToSet: { seenBy: userId },
         $set: { [`unreadCounts.${userId}`]: 0 },
       },
-      {
-        new: true,
-      },
+      { new: true },
     );
 
     io.to(conversationId).emit('read-message', {

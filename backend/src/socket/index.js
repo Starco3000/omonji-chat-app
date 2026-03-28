@@ -23,13 +23,17 @@ io.on('connection', async (socket) => {
   const user = socket.user;
   console.log(`${user.displayName} online with socket ${socket.id}`);
 
-  onlineUsers.set(user._id, socket._id);
+  onlineUsers.set(user._id, socket.id);
 
   io.emit('online-users', Array.from(onlineUsers.keys())); //update online user for client
 
   const conversationIds = await getUserConversationsForSocketIO(user._id);
   conversationIds.forEach((id) => {
     socket.join(id);
+  });
+
+  socket.on('join-conversation', (conversationId) => {
+    socket.join(conversationId);
   });
 
   socket.on('disconnect', () => {
