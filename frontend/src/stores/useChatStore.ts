@@ -219,14 +219,21 @@ export const useChatStore = create<ChatState>()(
 
       createConversation: async (type, name, memberIds) => {
         try {
-          const conversation = await chatService.createConversation(type, name, memberIds);
-          get().addConvo(conversation) //Add convsersation into store
-          useSocketStore.getState().socket?.emit("join-conversation", conversation._id)
+          set({ loading: true });
+          const conversation = await chatService.createConversation(
+            type,
+            name,
+            memberIds,
+          );
+          get().addConvo(conversation); //Add convsersation into store
+          useSocketStore
+            .getState()
+            .socket?.emit('join-conversation', conversation._id);
         } catch (error) {
-          console.error("Error when call createConversation in store", error)
+          console.error('Error when call createConversation in store', error);
+        } finally {
+          set({ loading: false });
         }
-
-
       },
     }),
     {
