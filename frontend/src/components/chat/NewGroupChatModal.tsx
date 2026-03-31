@@ -41,8 +41,8 @@ const NewGroupChatModal = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       e.preventDefault();
-      if (invitedUsers.length === 0) {
-        toast.warning('Bạn cần mời ít nhất 1 thành viên vào nhóm');
+      if (invitedUsers.length < 2) {
+        toast.warning('Bạn cần mời ít nhất 2 thành viên vào nhóm để tạo nhóm chat');
         return;
       }
       await createConversation(

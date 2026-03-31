@@ -16,6 +16,10 @@ export const useAuthStore = create<AuthState>()(
         set({ accessToken });
       },
 
+      setUser: (user) => {
+        set({ user });
+      },
+
       //Re-use store when user logout or token expired
       clearState: () => {
         set({ accessToken: null, user: null, loading: false });
