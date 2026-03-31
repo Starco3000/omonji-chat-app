@@ -20,7 +20,12 @@ const PORT = process.env.PORT || 5001;
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+app.use(
+  cors({
+    origin: [process.env.CLIENT_URL, process.env.CLIENT_URL_PRODUCTION],
+    credentials: true,
+  }),
+);
 
 // if (process.env.MODE_ENV !== 'production') {
 //   app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
@@ -30,7 +35,7 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET, 
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 // public routes
